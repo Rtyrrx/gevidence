@@ -1,13 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Campaign - GEvidence</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Create Campaign — GEvidence</title>
     <link href="style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="js/contract-config.js"></script>
+    <script src="js/load-abis.js"></script>
+    <script src="js/web3-config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/wallet-manager.js"></script>
+    <script src="js/campaign-manager.js"></script>
+    <script src="js/create-campaign.js"></script>
 </head>
-
 <body>
+    <header class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand logo-text" href="dashboard.html">GEvidence</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto me-5">
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html"><i class="fas fa-home me-1"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="create-campaign.html"><i class="fas fa-plus me-1"></i> Create Campaign</a></li>
+                    <li class="nav-item"><a class="nav-link" href="investments.html"><i class="fas fa-wallet me-1"></i> Portfolio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="offcycle.html"><i class="fas fa-certificate me-1"></i> Off-cycle</a></li>
+                </ul>
+                <div id="walletStatus" class="d-flex align-items-center gap-2">
+                    <span id="walletAddr" class="text-muted" style="font-size:0.9rem;"></span>
+                    <button id="disconnectBtn" class="btn btn-sm btn-outline-secondary">Disconnect</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-5" style="max-width:700px;">
+        <h1 class="section-title mb-4">Create New Campaign</h1>
+        
+        <form id="createCampaignForm" class="card border-0 shadow-lg p-5">
+            <div class="mb-4">
+                <label class="form-label fw-bold">Campaign Title <span class="text-danger">*</span></label>
+                <input id="inputTitle" type="text" class="form-control form-control-lg" 
+                       placeholder="e.g., Solar Farm in Kazakhstan" required>
+                <small class="text-muted">Give your campaign a clear, descriptive name</small>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">Evidence ID <span class="text-danger">*</span></label>
+                <input id="inputEvidenceId" type="text" class="form-control form-control-lg" 
+                       placeholder="e.g., EV-2024-001" required>
+                <small class="text-muted">Unique identifier for this ESG evidence</small>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Funding Goal (ETH) <span class="text-danger">*</span></label>
+                    <input id="inputGoal" type="number" class="form-control form-control-lg" 
+                           step="0.1" min="0.1" placeholder="e.g., 5.0" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Deadline <span class="text-danger">*</span></label>
+                    <input id="inputDeadline" type="date" class="form-control form-control-lg" required>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">Campaign Type <span class="text-danger">*</span></label>
+                <select id="inputType" class="form-select form-select-lg" required>
+                    <option value="">Select type...</option>
+                    <option value="Solar">Solar Energy</option>
+                    <option value="Water">Water Treatment</option>
+                    <option value="Waste">Waste Recycling</option>
+                    <option value="Agro">Agriculture</option>
+                    <option value="Monitoring">Environmental Monitoring</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">Description</label>
+                <textarea id="inputDescription" class="form-control" rows="4" 
+                          placeholder="Describe your campaign and its environmental impact..."></textarea>
+                <small class="text-muted">Help investors understand your project</small>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-ge-primary btn-lg flex-grow-1">
+                    <i class="fas fa-rocket me-2"></i> Create Campaign
+                </button>
+                <a href="dashboard.html" class="btn btn-outline-secondary btn-lg">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </main>
+
+    <footer class="mt-5 p-4 text-center border-top">
+        <small class="text-muted">© 2026 GEvidence Platform</small>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

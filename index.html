@@ -4,3 +4,425 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GEvidence — Green Evidence Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+    <header class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand logo-text" href="#home">GEvidence</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link scroll-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link scroll-link" href="#projects">Projects</a></li>
+                    <li class="nav-item"><a class="nav-link scroll-link" href="#how-it-works">How It Works</a></li>
+                    <li class="nav-item"><a class="nav-link scroll-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link scroll-link" href="#contact">Contact</a></li>
+                    <button class="btn btn-outline-secondary" id="themeToggle" title="Переключить тему">
+                        <i class="fas fa-moon"></i> 
+                    </button>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="d-flex align-items-center">
+            <div class="container">
+                <div id="home-section">
+                    <h1 class="hero-title">Blockchain Evidence for a Greener Future</h1>
+                    <p class="lead mb-5">Прозрачная верификация ESG-проектов с помощью IoT-данных и технологий блокчейн.</p>
+                    <a href="#projects" class="btn btn-ge-primary btn-lg me-3 scroll-link">Explore Projects</a>
+                    <a href="#how-it-works" class="btn btn-ge-secondary btn-lg scroll-link">Learn More</a>
+                </div>
+
+                <div class="row py-5 fade-in-on-scroll">
+                    <div class="col-lg-6 mb-4 mb-lg-0">
+                        <h3 class="text-ge-blue fw-bold">Проблема: Недоверие к ESG</h3>
+                        <p class="text-muted">Традиционная отчетность часто основана на ручных данных, подвержена гринвошингу и не обеспечивает инвесторам полной уверенности в реальном воздействии проекта. Отсутствие верифицируемой метрики тормозит устойчивое развитие.</p>
+                        <i class="fas fa-exclamation-triangle fa-3x text-warning"></i>
+                    </div>
+                    <div class="col-lg-6">
+                        <h3 class="text-ge-green fw-bold">Решение: GEvidence</h3>
+                        <p class="text-muted">Мы используем IoT-сенсоры для сбора неизменных данных, которые моментально записываются в блокчейн. Это гарантирует 100% прозрачность и верифицируемую метрику для каждой экологической инициативы.</p>
+                        <i class="fas fa-shield-alt fa-3x text-ge-green"></i>
+                    </div>
+                </div>
+
+                <h2 class="section-title fade-in-on-scroll">Верифицированные проекты в фокусе</h2>
+                <div id="projectCarousel" class="carousel slide fade-in-on-scroll" data-bs-ride="carousel">
+                    <div class="carousel-inner rounded-3 shadow-lg">
+                        <div class="carousel-item active">
+                            <img src="https://placehold.co/1200x400/10B981/FFFFFF?text=Solar+Farm+KZ" class="d-block w-100" alt="Solar Project">
+                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded-top">
+                                <h5>Солнечная Энергия, Астана</h5>
+                                <p>Снижение выбросов на 1500 т CO2 в год.</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://placehold.co/1200x400/0F4C81/FFFFFF?text=Water+Treatment+Plant" class="d-block w-100" alt="Water Project">
+                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded-top">
+                                <h5>Очистка Воды, Алматы</h5>
+                                <p>Мониторинг качества воды в реальном времени через IoT.</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://placehold.co/1200x400/3B82F6/FFFFFF?text=Waste+Recycling+Initiative" class="d-block w-100" alt="Waste Project">
+                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded-top">
+                                <h5>Утилизация Отходов, Караганда</h5>
+                                <p>Автоматизированный учёт переработанного сырья.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#projectCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
+                <div class="text-center mt-5 p-5 bg-light rounded-3 fade-in-on-scroll">
+                    <h3 class="fw-bold mb-3 text-ge-blue">Готовы к прозрачным инвестициям?</h3>
+                    <p class="lead mb-4">Подключите MetaMask и начните верифицировать ESG-проекты прямо сейчас.</p>
+                    <div class="d-flex gap-3 justify-content-center">
+                        <button id="ctaMetamaskBtn" type="button" class="btn btn-ge-primary btn-lg px-5">
+                            <i class="fab fa-ethereum me-2"></i> Connect MetaMask
+                        </button>
+                        <a id="dashboardBtn" href="dashboard.html" class="btn btn-ge-secondary btn-lg px-5" style="display:none;">
+                            <i class="fas fa-chart-line me-2"></i> Go to Dashboard
+                        </a>
+                    </div>
+                    <p class="small text-muted mt-3">Или скачайте расширение <a href="https://metamask.io" target="_blank">MetaMask здесь</a></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="bg-ge-light-bg">
+            <div class="container">
+                <h2 class="section-title">Верифицированные ESG-проекты</h2>
+                
+                <div class="row g-3 mb-5 fade-in-on-scroll">
+                    <div class="col-md-4">
+                        <select class="form-select" id="typeFilter">
+                            <option selected>Тип проекта</option>
+                            <option value="Solar">Солнечная (Solar)</option>
+                            <option value="Water">Вода (Water)</option>
+                            <option value="Waste">Отходы (Waste)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" id="regionFilter">
+                            <option selected>Регион</option>
+                            <option value="KZ">Казахстан</option>
+                            <option value="ASIA">Азия</option>
+                            <option value="EU">Европа</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" placeholder="Поиск по названию..." id="searchBar">
+                    </div>
+                </div>
+
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="projectList">
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works">
+            <div class="container">
+                <h2 class="section-title">Как работает GEvidence: От IoT до Блокчейна</h2>
+                
+                <div class="row">
+                    <div class="col-lg-6 fade-in-on-scroll">
+                        <div class="accordion" id="howItWorksAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <span class="badge bg-ge-green me-2">Шаг 1</span> IoT Сенсоры собирают данные
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#howItWorksAccordion">
+                                    <div class="accordion-body">
+                                        Наши верифицированные датчики постоянно измеряют ключевые ESG-показатели (производство энергии, качество воды, уровень выбросов) с высокой точностью.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <span class="badge bg-ge-green me-2">Шаг 2</span> Данные шифруются и хранятся в Блокчейне
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#howItWorksAccordion">
+                                    <div class="accordion-body">
+                                        Собранные данные хэшируются и записываются в неизменяемый реестр. Это гарантирует, что показатели не могут быть подделаны или изменены задним числом.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        <span class="badge bg-ge-green me-2">Шаг 3</span> Верификация и отображение на Дашборде
+                                    </button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#howItWorksAccordion">
+                                    <div class="accordion-body">
+                                        Инвесторы и партнеры получают доступ к нашему Дашборду, где видят данные, криптографически верифицированные блокчейном, в реальном времени.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mt-5 mt-lg-0 fade-in-on-scroll">
+                        <h3 class="text-ge-blue fw-bold mb-3">Схема Потока Данных</h3>
+                        <p class="text-muted">Наглядное представление пути верификации.</p>
+                        <div class="p-4 bg-white border border-ge-green border-3 rounded-3 shadow-sm">
+                            <p class="fw-bold text-center mb-1">
+                                <i class="fas fa-microchip me-2 text-ge-blue"></i> 
+                                    IoT &rarr; Encryption &rarr; Blockchain Ledger &rarr; GEvidence API &rarr; Dashboard
+                                <i class="fas fa-chart-line ms-2 text-ge-green"></i>
+                            </p>
+                        </div>
+                        
+                        <div class="mt-5">
+                            <h3 class="text-ge-blue fw-bold mb-3">Объясняющее Видео</h3>
+                            <div class="ratio ratio-16x9">
+                                <iframe src="https://youtu.be/ZVgHPSyEIqk?si=qRVV3_-FtmLgHylO"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="bg-ge-light-bg">
+            <div class="container">
+                <h2 class="section-title">О нас и наша миссия</h2>
+                
+                <div class="row align-items-center mb-5 fade-in-on-scroll">
+                    <div class="col-md-7">
+                        <h3 class="text-ge-blue fw-bold">Миссия GEvidence</h3>
+                        <p class="lead">Мы стремимся стать стандартом прозрачности для ESG-инвестиций, используя передовые технологии. Наша цель — обеспечить устойчивое развитие Казахстана и всего региона через верифицируемую и надежную отчетность.</p>
+                        <ul class="list-unstyled mt-3">
+                            <li><i class="fas fa-check-circle text-ge-green me-2"></i> Прозрачность (Transparency)</li>
+                            <li><i class="fas fa-check-circle text-ge-green me-2"></i> Неизменность (Immutability)</li>
+                            <li><i class="fas fa-check-circle text-ge-green me-2"></i> Устойчивость (Sustainability)</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-5 text-center mt-4 mt-md-0">
+                        <img src="https://constantenergy.net/wp-content/uploads/2024/10/esg-goals-01-min.jpg" class="img-fluid rounded-circle shadow-lg" alt="Mission Icon">
+                    </div>
+                </div>
+
+                <h3 class="text-ge-blue fw-bold text-center mt-5 mb-4">Наша команда</h3>
+                <div class="row text-center g-4">
+                    <div class="col-lg-3 col-md-6 fade-in-on-scroll">
+                        <div class="p-3 border rounded-3 bg-white team-member">
+                            <img src="me.jpg" class="rounded-circle mb-3 team-member-img" alt="Ali Tokberdiyev">
+                            <h5 class="fw-bold">Ali Tokberdiyev</h5>
+                            <p class="text-muted">Founder & CEO</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 fade-in-on-scroll" style="transition-delay: 0.2s;">
+                        <div class="p-3 border rounded-3 bg-white team-member">
+                            <img src="alina.jpg" class="rounded-circle mb-3 team-member-img" alt="Alina Sarsenova">
+                            <h5 class="fw-bold">Alina Sarsenova</h5>
+                            <p class="text-muted">Head of Blockchain R&D</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 fade-in-on-scroll" style="transition-delay: 0.4s;">
+                        <div class="p-3 border rounded-3 bg-white team-member">
+                            <img src="nadya.jpg" class="rounded-circle mb-3 team-member-img" alt="Nadezhda Na">
+                            <h5 class="fw-bold">Nadezhda Na</h5>
+                            <p class="text-muted">IoT Systems Architect</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 fade-in-on-scroll" style="transition-delay: 0.6s;">
+                        <div class="p-3 border rounded-3 bg-white team-member">
+                            <img src="zhibek.jpg" class="rounded-circle mb-3 team-member-img" alt="Zhibek Abdullaeva">
+                            <h5 class="fw-bold">Zhibek Abdullaeva</h5>
+                            <p class="text-muted">ESG Strategist</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-ge-blue fw-bold text-center mt-5 mb-4">Наши партнеры</h3>
+                <div class="row justify-content-center align-items-center g-4 fade-in-on-scroll">
+                    <div class="col-4 col-md-2 text-center"><img src="https://aifc.kz/wp-content/uploads/2024/05/aifc_cmyk.jpg" alt="AIFC Logo" class="img-fluid opacity-75"></div>
+                    <div class="col-4 col-md-2 text-center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Logo_astana_it_university.png/500px-Logo_astana_it_university.png" alt="Astana IT University Logo" class="img-fluid opacity-75"></div>
+                    <div class="col-4 col-md-2 text-center"><img src="https://k-innovations.com/cdn/shop/files/K-Innovations_Social-Sharing-img_NEW_1000x.jpg?v=1737121663" alt="Innovations Logo" class="img-fluid opacity-75"></div>
+                    <div class="col-4 col-md-2 text-center"><img src="https://www.careersinafrica.com/wp-content/uploads/2019/11/UNDP.png" alt="UNDP KZ Logo" class="img-fluid opacity-75"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="container">
+                <h2 class="section-title">Свяжитесь с нами / Присоединяйтесь</h2>
+                <div class="row">
+                    <div class="col-lg-6 fade-in-on-scroll">
+                        <h3 class="text-ge-blue fw-bold mb-3">Форма для связи</h3>
+                        <p class="text-muted">Оставьте заявку, чтобы стать партнером, инвестором или разработчиком.</p>
+                        
+                        <form id="contactForm" novalidate>
+                            <div class="mb-3">
+                                <label for="contactName" class="form-label">Имя *</label>
+                                <input type="text" class="form-control" id="contactName" required>
+                                <div class="invalid-feedback">Пожалуйста, укажите ваше имя.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="contactEmail" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="contactEmail" required>
+                                <div class="invalid-feedback">Пожалуйста, укажите корректный email.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="contactRole" class="form-label">Ваша роль (выберите) *</label>
+                                <select class="form-select" id="contactRole" required>
+                                    <option value="">Выберите роль</option> 
+                                    <option value="Investor">Инвестор</option>
+                                    <option value="Partner">Партнер проекта</option>
+                                    <option value="Developer">Разработчик</option>
+                                    <option value="Other">Другое</option>
+                                </select>
+                                <div class="invalid-feedback">Пожалуйста, выберите вашу роль.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="contactMessage" class="form-label">Сообщение *</label>
+                                <textarea class="form-control" id="contactMessage" rows="4" required></textarea> 
+                                <div class="invalid-feedback">Пожалуйста, напишите сообщение.</div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-ge-primary w-100">Отправить заявку</button>
+                            
+                            <div id="successMessage" class="mt-3 alert alert-success d-none">
+                                Спасибо! Ваша заявка успешно отправлена. Мы свяжемся с вами в ближайшее время.
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-lg-6 mt-5 mt-lg-0 fade-in-on-scroll">
+                        <h3 class="text-ge-blue fw-bold mb-3">Наш офис и контакты</h3>
+                        <div class="ratio ratio-4x3 rounded-3 shadow-sm mb-4">  
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2505.335279920574!2d71.42738570220774!3d51.102273896563894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x424585bd09db3fa9%3A0xc686d63fc0e7344f!2sAITU!5e0!3m2!1sru!2skz!4v1762329690912!5m2!1sru!2skz" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>                 
+                        </div>
+
+                        <div class="d-flex justify-content-center justify-content-lg-start fs-3">
+                            <a href="#" class="text-ge-blue me-3"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="text-ge-blue me-3"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-ge-blue me-3"><i class="fab fa-facebook"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+</main>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    &copy; 2025 GEvidence | All Rights Reserved.
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#contact" class="me-3 scroll-link">Contact Us</a>
+                    <a href="#">Privacy Policy</a>
+                    <span class="mx-2">|</span>
+                    <a href="#">Terms of Use</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="projectModal" tabindex="-1" aria-labelledby="projectModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-ge-blue text-white">
+                    <h5 class="modal-title" id="projectModalLabel">Детали проекта: Солнечная Энергия "Куат"</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success fw-bold"><i class="fas fa-check-circle me-2"></i> Verified on Blockchain (Hash: 0x932f...ab1c)</div>
+                    
+                    <h6 class="text-ge-green fw-bold">ESG Score Progress</h6>
+                    <p>Эффективность по достижению целей (92%)</p>
+                    <div class="progress mb-4" role="progressbar" aria-label="ESG Score" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100" style="height: 20px;">
+                        <div class="progress-bar bg-ge-green" style="width: 92%">92%</div>
+                    </div>
+
+                    <h6 class="text-ge-blue fw-bold">IoT-данные: Генерация Энергии (кВт/ч)</h6>
+                    <div class="p-3 border rounded-3 text-center mb-4">
+                        <img src="https://placehold.co/600x200/F0F0F0/0F4C81?text=Daily+Energy+Generation+Graph" class="img-fluid" alt="IoT Data Graph">
+                    </div>
+                    
+                    <h6 class="text-ge-blue fw-bold">Ключевые показатели</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-bolt me-2 text-warning"></i> Общая мощность: 50 МВт</li>
+                        <li><i class="fas fa-map-marker-alt me-2 text-danger"></i> Регион: Казахстан (KZ)</li>
+                        <li><i class="fas fa-calendar-alt me-2 text-secondary"></i> Запуск: 2023 г.</li>
+                    </ul>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-ge-primary">Скачать отчет</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="demoModal" tabindex="-1" aria-labelledby="demoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-ge-green text-white">
+                    <h5 class="modal-title" id="demoModalLabel">Запросить Демо</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Оставьте свои контакты, и наш менеджер свяжется с вами для проведения персональной демонстрации платформы GEvidence.</p>
+                    <form>
+                        <div class="mb-3">
+                            <label for="demoEmail" class="form-label">Рабочий Email</label>
+                            <input type="email" class="form-control" id="demoEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="demoCompany" class="form-label">Компания</label>
+                            <input type="text" class="form-control" id="demoCompany">
+                        </div>
+                        <button type="submit" class="btn btn-ge-blue w-100">Запросить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+    <script src="js/contract-config.js"></script>
+    <script src="js/load-abis.js"></script>
+    <script src="js/web3-config.js"></script>
+    <script src="js/metamask-diagnostics.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/wallet-manager.js"></script>
+    <script src="js/campaign-manager.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/campaign-page.js"></script>
+    <script src="js/create-campaign.js"></script>
+    <script src="js/investments-page.js"></script>
+    <script src="js/offcycle-page.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
