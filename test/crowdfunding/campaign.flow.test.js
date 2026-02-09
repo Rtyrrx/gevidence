@@ -87,7 +87,6 @@ describe("Crowdfunding (campaign flow)", function () {
     const tx = await crowdfund.connect(userCreator).createCampaign(evidenceId, "Community IoT Check", goal, deadline);
     const rc = await tx.wait();
 
-    // campaignId is returned, but easiest: take from event args[0]
     const ev = rc.logs.map((l) => {
       try {
         return crowdfund.interface.parseLog(l);
@@ -106,11 +105,9 @@ describe("Crowdfunding (campaign flow)", function () {
     const contrib = await crowdfund.contributions(campaignId, contributor.address);
     expect(contrib).to.equal(contributeValue);
 
-    // reward minted proportional: valueWei * rate / 1e18
     const expectedReward = (contributeValue * rewardRate) / (10n ** 18n);
     expect(await rewardToken.balanceOf(contributor.address)).to.equal(expectedReward);
 
-    // finalize after deadline
     await advanceTime(3605);
     await (await crowdfund.finalize(campaignId)).wait();
 
@@ -118,7 +115,6 @@ describe("Crowdfunding (campaign flow)", function () {
     expect(camp.finalized).to.equal(true);
     expect(camp.successful).to.equal(true);
 
-    // withdraw to treasury
     const before = await ethers.provider.getBalance(treasury.address);
     await (await crowdfund.connect(treasury).withdraw(campaignId)).wait();
     const after = await ethers.provider.getBalance(treasury.address);
