@@ -3,11 +3,6 @@ pragma solidity ^0.8.20;
 
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
-/**
- * @title RoleManager
- * @notice Centralized roles for GEvidence ecosystem
- * @dev Keep roles stable so frontend can rely on them
- */
 contract RoleManager is AccessControl {
     bytes32 public constant ADMIN_ROLE        = keccak256("ADMIN_ROLE");
     bytes32 public constant COMPANY_ROLE      = keccak256("COMPANY_ROLE");
@@ -28,8 +23,6 @@ contract RoleManager is AccessControl {
 
         _grantRole(DEFAULT_ADMIN_ROLE, initialAdmin);
         _grantRole(ADMIN_ROLE, initialAdmin);
-
-        // Admins manage all roles
         _setRoleAdmin(ADMIN_ROLE, DEFAULT_ADMIN_ROLE);
         _setRoleAdmin(COMPANY_ROLE, ADMIN_ROLE);
         _setRoleAdmin(VERIFIER_ROLE, ADMIN_ROLE);
@@ -42,8 +35,6 @@ contract RoleManager is AccessControl {
         require(hasRole(ADMIN_ROLE, msg.sender), "RoleManager: not admin");
         _;
     }
-
-    // Convenience functions (front-end friendly)
 
     function grantAdmin(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _grantRole(ADMIN_ROLE, account);
@@ -85,3 +76,4 @@ contract RoleManager is AccessControl {
         emit IoTOperatorRevoked(account);
     }
 }
+
