@@ -6,17 +6,6 @@ import {RoleManager} from "../../core/RoleManager.sol";
 import {GEvidenceRegistry} from "../../core/GEvidenceRegistry.sol";
 import {EvidenceTypes} from "../../core/EvidenceTypes.sol";
 
-/**
- * @title OffCycleCheckModule
- * @notice Investors can stake reward tokens to trigger an off-cycle (unplanned) verification check.
- *
- * Stake flow (simple & strong for demo):
- *  - requester stakes reward tokens (transferFrom)
- *  - module records request and notifies GEvidenceRegistry (recordOffCycleRequest)
- *  - verifier/IoT-operator resolves the request with resultHash
- *  - if approved => stake returns to requester
- *  - if rejected/spam => stake sent to treasury
- */
 contract OffCycleCheckModule {
     enum RequestStatus {
         Pending,
@@ -32,9 +21,9 @@ contract OffCycleCheckModule {
         uint64 resolvedAt;
         RequestStatus status;
         bool approved;
-        bytes32 reasonHash;   // hash(reason text / json)
-        bytes32 metricsHash;  // hash(selected metric ids / config)
-        bytes32 resultHash;   // hash(report / dataset) set on resolve
+        bytes32 reasonHash;   
+        bytes32 metricsHash;  
+        bytes32 resultHash;   
     }
 
     RoleManager public immutable roles;
@@ -115,7 +104,6 @@ contract OffCycleCheckModule {
         _;
     }
 
-    // --- Admin controls ---
     function setTreasury(address newTreasury) external onlyAdmin {
         if (newTreasury == address(0)) revert ZeroAddress();
         address old = treasury;
@@ -129,11 +117,6 @@ contract OffCycleCheckModule {
         emit MinStakeChanged(old, newMinStake);
     }
 
-    // --- Core flow ---
-    /**
-     * @notice Stake reward tokens to request an off-cycle check for a Verified evidence
-     * @dev User must approve() this module in RewardToken first
-     */
     function requestOffCycleCheck(
         uint256 evidenceId,
         uint256 stakeAmount,
@@ -146,7 +129,6 @@ contract OffCycleCheckModule {
         }
         if (stakeAmount < minStake) revert StakeTooLow();
 
-        // take stake from requester
         bool ok = rewardToken.transferFrom(msg.sender, address(this), stakeAmount);
         if (!ok) revert TokenTransferFailed();
 
@@ -165,16 +147,11 @@ contract OffCycleCheckModule {
             resultHash: bytes32(0)
         });
 
-        // inform registry so frontend can list by evidenceId
         registry.recordOffCycleRequest(evidenceId, requestId);
 
         emit OffCycleRequested(requestId, evidenceId, msg.sender, stakeAmount, reasonHash, metricsHash);
     }
 
-    /**
-     * @notice Resolver posts result hash and decides whether request was valid (approved) or spam (rejected)
-     * @param resultUri optional off-chain URI for the check report (stored in event only, not in storage)
-     */
     function resolveOffCycleCheck(
         uint256 requestId,
         bool approved,
@@ -189,9 +166,6 @@ contract OffCycleCheckModule {
         r.resultHash = resultHash;
         r.resolvedAt = uint64(block.timestamp);
 
-        // payout rule:
-        //  - approved => return stake to requester
-        //  - rejected => send stake to treasury (anti-spam)
         address to = approved ? r.requester : treasury;
         bool ok = rewardToken.transfer(to, r.stakeAmount);
         if (!ok) revert TokenTransferFailed();
@@ -199,7 +173,6 @@ contract OffCycleCheckModule {
         emit OffCycleResolved(requestId, r.evidenceId, approved, resultHash, msg.sender, resultUri);
     }
 
-    // --- View helpers (frontend-friendly) ---
     function nextRequestId() external view returns (uint256) {
         return _nextRequestId;
     }
