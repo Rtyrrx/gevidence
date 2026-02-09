@@ -10,5 +10,6 @@ library GEvidenceErrors {
     error NotEvidenceOwner();
     error InvalidStatus();
     error ZeroValue();
-    error AlreadyCertified(); // certificate already linked for evidence
+    error AlreadyCertified(); 
 }
+
