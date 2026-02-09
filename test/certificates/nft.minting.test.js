@@ -79,7 +79,6 @@ async function createEvidenceFlexible(registry, roles, admin, company) {
 }
 
 async function ensureVerified(registry, roles, admin, verifier, evidenceId, company) {
-  // give company role
   try {
     const COMPANY_ROLE = await roles.COMPANY_ROLE();
     if (!(await roles.hasRole(COMPANY_ROLE, company.address))) {
@@ -94,17 +93,14 @@ async function ensureVerified(registry, roles, admin, verifier, evidenceId, comp
     }
   } catch (_) {}
 
-  // First submit evidence if needed
   try {
     await (await registry.connect(company).submitEvidence(evidenceId)).wait();
   } catch (_) {}
 
-  // Try to move to UnderReview
   try {
     await (await registry.connect(verifier).moveToUnderReview(evidenceId, "review initiated")).wait();
   } catch (_) {}
 
-  // Try to verify the evidence
   try {
     await (await registry.connect(verifier).verifyEvidence(evidenceId, true, "verified")).wait();
   } catch (_) {}
@@ -130,14 +126,12 @@ describe("CompanyCertificateNFT", function () {
     await advanceTime(3605);
     await (await crowdfund.finalize(campaignId)).wait();
 
-    // make evidence Verified
     await ensureVerified(registry, roles, admin, verifier, evidenceId, company);
 
     const tokenUri = "ipfs://gevidence/company-cert/1";
     const tx = await cert.connect(verifier).mintCertificate(evidenceId, campaignId, tokenUri);
     const r = await tx.wait();
 
-    // tokenId from event
     const parsed = r.logs.map((l) => {
       try { return cert.interface.parseLog(l); } catch { return null; }
     }).find((x) => x && x.name === "CertificateMinted");
@@ -147,7 +141,6 @@ describe("CompanyCertificateNFT", function () {
 
     expect((await cert.ownerOf(tokenId)).toLowerCase()).to.equal(company.address.toLowerCase());
 
-    // registry should store certificate token if linkCertificate is used
     try {
       const linked = await registry.certificateTokenOfEvidence(evidenceId);
       expect(linked).to.equal(tokenId);
