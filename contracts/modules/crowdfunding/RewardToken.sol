@@ -3,11 +3,6 @@ pragma solidity ^0.8.20;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-/**
- * @title RewardToken
- * @notice Internal reward token minted to contributors
- * @dev Minting is restricted to a single minter (crowdfunding contract)
- */
 contract RewardToken is ERC20 {
     address public minter;
 
@@ -36,4 +31,5 @@ contract RewardToken is ERC20 {
     function mint(address to, uint256 amount) external onlyMinter {
         _mint(to, amount);
     }
+
 }
