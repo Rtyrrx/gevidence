@@ -80,7 +80,6 @@ async function createEvidenceFlexible(registry, roles, admin, company) {
 }
 
 async function ensureVerified(registry, roles, admin, verifier, evidenceId, company) {
-  // give company role
   try {
     const COMPANY_ROLE = await roles.COMPANY_ROLE();
     if (!(await roles.hasRole(COMPANY_ROLE, company.address))) {
@@ -95,17 +94,14 @@ async function ensureVerified(registry, roles, admin, verifier, evidenceId, comp
     }
   } catch (_) {}
 
-  // First submit evidence if needed
   try {
     await (await registry.connect(company).submitEvidence(evidenceId)).wait();
   } catch (_) {}
 
-  // Try to move to UnderReview
   try {
     await (await registry.connect(verifier).moveToUnderReview(evidenceId, "review initiated")).wait();
   } catch (_) {}
 
-  // Try to verify the evidence
   try {
     await (await registry.connect(verifier).verifyEvidence(evidenceId, true, "verified")).wait();
   } catch (_) {}
@@ -118,7 +114,6 @@ describe("Off-cycle checks", function () {
     const { roles, registry, crowdfund, rewardTokenAddr, off } = await deployAll(treasury.address);
     const evidenceId = await createEvidenceFlexible(registry, roles, admin, company);
 
-    // campaign to mint reward tokens for contributor
     const now = Number((await ethers.provider.getBlock("latest")).timestamp);
     const deadline = now + 3600;
     const goal = ethers.parseEther("1");
@@ -132,7 +127,6 @@ describe("Off-cycle checks", function () {
     await advanceTime(3605);
     await (await crowdfund.finalize(campaignId)).wait();
 
-    // must be verified evidence for off-cycle
     await ensureVerified(registry, roles, admin, verifier, evidenceId, company);
 
     const token = await ethers.getContractAt("RewardToken", rewardTokenAddr);
@@ -154,7 +148,6 @@ describe("Off-cycle checks", function () {
 
     const requestId = parsed.args.requestId;
 
-    // grant resolver role (verifier)
     try {
       const VERIFIER_ROLE = await roles.VERIFIER_ROLE();
       if (!(await roles.hasRole(VERIFIER_ROLE, verifier.address))) {
@@ -165,6 +158,6 @@ describe("Off-cycle checks", function () {
     await (await off.connect(verifier).resolveOffCycleCheck(requestId, true, hashTxt("result-hash"), "ipfs://report/1")).wait();
 
     const after = await token.balanceOf(contributor.address);
-    expect(after).to.equal(before); // stake returned on approved
+    expect(after).to.equal(before); 
   });
 });
