@@ -41,7 +41,6 @@ async function findEvidenceId(registry, companyAddr, maxScan = 50) {
 }
 
 async function createEvidenceFlexible(registry, roles, admin, company) {
-  // ensure COMPANY_ROLE if RoleManager is used for permissions
   try {
     const COMPANY_ROLE = await roles.COMPANY_ROLE();
     const has = await roles.hasRole(COMPANY_ROLE, company.address);
@@ -49,7 +48,6 @@ async function createEvidenceFlexible(registry, roles, admin, company) {
       await (await roles.connect(admin).grantRole(COMPANY_ROLE, company.address)).wait();
     }
   } catch (_) {
-    // ignore if RoleManager API differs
   }
 
   const now = await latestTs();
@@ -91,34 +89,27 @@ describe("GEvidenceRegistry (core)", function () {
     expect(await registry.existsEvidence(evidenceId)).to.equal(true);
     expect((await registry.companyOfEvidence(evidenceId)).toLowerCase()).to.equal(company.address.toLowerCase());
 
-    // status read should not revert
     const st = await registry.statusOfEvidence(evidenceId);
     expect(st).to.not.be.undefined;
 
-    // link/update campaign (we patched registry to allow updates for community campaigns)
     await (await registry.linkCampaign(evidenceId, 101)).wait();
     expect(await registry.campaignOfEvidence(evidenceId)).to.equal(101n);
 
     await (await registry.linkCampaign(evidenceId, 202)).wait();
     expect(await registry.campaignOfEvidence(evidenceId)).to.equal(202n);
 
-    // record off-cycle request (if implemented)
     await (await registry.recordOffCycleRequest(evidenceId, 77)).wait();
 
-    // optional list helpers
     try {
       const list = await registry.listOffCycleRequests(evidenceId);
       expect(list.map((x) => Number(x))).to.include(77);
     } catch (_) {
-      // ok if list helpers not present; recordOffCycleRequest still done
     }
 
-    // link certificate token (if implemented)
     try {
       await (await registry.linkCertificate(evidenceId, 1)).wait();
       expect(await registry.certificateTokenOfEvidence(evidenceId)).to.equal(1);
     } catch (_) {
-      // ok if certificate linking is enforced only by NFT contract
     }
   });
 });
