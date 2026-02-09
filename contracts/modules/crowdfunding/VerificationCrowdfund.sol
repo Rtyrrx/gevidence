@@ -10,16 +10,16 @@ contract VerificationCrowdfund {
     using RewardMath for uint256;
 
     enum CampaignKind {
-        CompanyOrAdmin, // created by company/admin
-        Community       // created by regular user
+        CompanyOrAdmin, 
+        Community       
     }
 
     struct Campaign {
         uint256 id;
         uint256 evidenceId;
 
-        address creator;       // who opened campaign (user/admin/company)
-        address beneficiary;   // where ETH goes if successful (treasury / IoT operator)
+        address creator;      
+        address beneficiary;   
 
         CampaignKind kind;
 
@@ -36,18 +36,17 @@ contract VerificationCrowdfund {
     RoleManager public immutable roles;
 
     RewardToken public immutable rewardToken;
-    uint256 public immutable rewardRate; // tokens per 1 ETH (1e18 wei)
+    uint256 public immutable rewardRate; 
 
-    address public treasury;             // payout address (IoT operator / platform)
-    uint256 public minGoalWei;           // optional anti-spam
-    uint256 public minDurationSeconds;   // optional anti-spam
+    address public treasury;            
+    uint256 public minGoalWei;          
+    uint256 public minDurationSeconds;  
 
     uint256 private _nextCampaignId = 1;
 
     mapping(uint256 => Campaign) private _campaignById;
-    mapping(uint256 => mapping(address => uint256)) public contributions; // campaignId => contributor => wei
+    mapping(uint256 => mapping(address => uint256)) public contributions; 
 
-    // evidenceId -> campaignIds history
     mapping(uint256 => uint256[]) private _campaignIdsByEvidence;
 
     event CampaignCreated(
@@ -115,16 +114,12 @@ contract VerificationCrowdfund {
         rewardRate = rewardRateTokensPerEth;
 
         treasury = treasuryAddress;
-
-        // optional defaults (anti-spam; can be changed by admin)
         minGoalWei = 0;
         minDurationSeconds = 0;
 
         RewardToken t = new RewardToken(rewardName, rewardSymbol, address(this));
         rewardToken = t;
     }
-
-    // -------- Admin controls (optional, but useful) --------
 
     function setTreasury(address newTreasury) external onlyAdmin {
         if (newTreasury == address(0)) revert ZeroValue();
@@ -145,12 +140,6 @@ contract VerificationCrowdfund {
         emit MinDurationChanged(old, newMinDurationSeconds);
     }
 
-    // -------- Core actions (final requirements) --------
-
-    /**
-     * @notice ANY user can create a campaign (community can speed up IoT verification)
-     * @dev Funds payout is ALWAYS to treasury (IoT operator / platform), not the creator.
-     */
     function createCampaign(
         uint256 evidenceId,
         string calldata title,
@@ -168,7 +157,6 @@ contract VerificationCrowdfund {
         uint256 duration = uint256(deadline) - block.timestamp;
         if (minDurationSeconds > 0 && duration < minDurationSeconds) revert DurationTooShort();
 
-        // Optional: prevent multiple active campaigns per evidence (clean UX)
         uint256 lastId = _latestCampaignIdForEvidence(evidenceId);
         if (lastId != 0) {
             Campaign storage last = _campaignById[lastId];
@@ -196,8 +184,6 @@ contract VerificationCrowdfund {
 
         _campaignById[campaignId] = c;
         _campaignIdsByEvidence[evidenceId].push(campaignId);
-
-        // update latest link in registry (we patched registry to allow updates)
         registry.linkCampaign(evidenceId, campaignId);
 
         emit CampaignCreated(campaignId, evidenceId, msg.sender, treasury, kind, title, goalWei, deadline);
@@ -231,10 +217,6 @@ contract VerificationCrowdfund {
         emit Finalized(campaignId, c.successful, c.raisedWei);
     }
 
-    /**
-     * @notice Withdraw raised ETH to beneficiary (treasury) if campaign succeeded
-     * @dev creator cannot withdraw; only treasury/admin can withdraw
-     */
     function withdraw(uint256 campaignId) external {
         Campaign storage c = _getCampaign(campaignId);
 
@@ -254,9 +236,6 @@ contract VerificationCrowdfund {
         emit Withdrawn(campaignId, c.beneficiary, amount);
     }
 
-    /**
-     * @notice Refund contributor if campaign failed
-     */
     function refund(uint256 campaignId) external {
         Campaign storage c = _getCampaign(campaignId);
         if (!c.finalized) revert CampaignActive();
@@ -272,8 +251,6 @@ contract VerificationCrowdfund {
 
         emit Refunded(campaignId, msg.sender, contributed);
     }
-
-    // -------- Frontend helpers --------
 
     function getCampaign(uint256 campaignId) external view returns (Campaign memory) {
         return _campaignById[campaignId];
@@ -308,9 +285,6 @@ contract VerificationCrowdfund {
         if (block.timestamp >= c.deadline) return 0;
         return uint256(c.deadline) - block.timestamp;
     }
-
-    // -------- Internal --------
-
     function _getCampaign(uint256 campaignId) internal view returns (Campaign storage) {
         Campaign storage c = _campaignById[campaignId];
         if (c.id == 0) revert CampaignNotFound();
