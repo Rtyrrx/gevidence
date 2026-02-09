@@ -65,20 +65,15 @@ async function main() {
   for (const a of verifierAddrs) await grantIfMissing(roles, VERIFIER_ROLE, a);
   for (const a of iotAddrs) await grantIfMissing(roles, IOT_ROLE, a);
 
-  // --- Optional parameter wiring ---
-  // Crowdfund controls
   if (dep.VerificationCrowdfund) {
     const cf = await ethers.getContractAt("VerificationCrowdfund", dep.VerificationCrowdfund);
 
-    // Optional: set treasury (if you want to change post-deploy)
     if (process.env.TREASURY_ADDRESS) {
       const tx = await cf.setTreasury(process.env.TREASURY_ADDRESS);
       await tx.wait();
       console.log(`[wire] Crowdfund treasury -> ${process.env.TREASURY_ADDRESS}`);
     }
 
-    // Optional anti-spam:
-    // CF_MIN_GOAL_ETH="0.05"
     if (process.env.CF_MIN_GOAL_ETH) {
       const minGoalWei = parseEther(process.env.CF_MIN_GOAL_ETH);
       const tx = await cf.setMinGoalWei(minGoalWei);
@@ -86,7 +81,6 @@ async function main() {
       console.log(`[wire] Crowdfund minGoalWei -> ${process.env.CF_MIN_GOAL_ETH} ETH`);
     }
 
-    // CF_MIN_DURATION_SEC="600"
     if (process.env.CF_MIN_DURATION_SEC) {
       const secs = Number(process.env.CF_MIN_DURATION_SEC);
       const tx = await cf.setMinDurationSeconds(secs);
@@ -120,4 +114,5 @@ async function main() {
 main().catch((e) => {
   console.error(e);
   process.exit(1);
+
 });
