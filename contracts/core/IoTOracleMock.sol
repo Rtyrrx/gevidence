@@ -4,15 +4,8 @@ pragma solidity ^0.8.20;
 import {RoleManager} from "./RoleManager.sol";
 import {EvidenceTypes} from "./EvidenceTypes.sol";
 
-/**
- * @title IoTOracleMock
- * @notice Demo/mock oracle to push IoT readings on-chain (for presentation/testing)
- * @dev In real life, IoT data stays off-chain; on-chain stores hashes/anchors.
- */
 contract IoTOracleMock {
     RoleManager public immutable roles;
-
-    // evidenceId -> readings (append-only)
     mapping(uint256 => EvidenceTypes.MetricReading[]) private _readings;
 
     event ReadingPushed(
@@ -67,4 +60,5 @@ contract IoTOracleMock {
     function listReadings(uint256 evidenceId) external view returns (EvidenceTypes.MetricReading[] memory) {
         return _readings[evidenceId];
     }
+
 }
