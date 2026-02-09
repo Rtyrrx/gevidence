@@ -1,0 +1,59 @@
+{
+  "campaigns": [
+    {
+      "id": 1,
+      "evidenceId": 101,
+      "title": "Solar Farm Verification - Astana",
+      "goalWei": "10000000000000000000",
+      "raisedWei": "7500000000000000000",
+      "deadline": 1740000000,
+      "finalized": false,
+      "successful": false,
+      "createdAt": 1739000000
+    },
+    {
+      "id": 2,
+      "evidenceId": 102,
+      "title": "Water Treatment Plant IoT Setup",
+      "goalWei": "15000000000000000000",
+      "raisedWei": "8200000000000000000",
+      "deadline": 1741000000,
+      "finalized": false,
+      "successful": false,
+      "createdAt": 1739000000
+    },
+    {
+      "id": 3,
+      "evidenceId": 103,
+      "title": "Waste Recycling Center Sensors",
+      "goalWei": "5000000000000000000",
+      "raisedWei": "5000000000000000000",
+      "deadline": 1738000000,
+      "finalized": true,
+      "successful": true,
+      "createdAt": 1739000000
+    },
+    {
+      "id": 4,
+      "evidenceId": 104,
+      "title": "Agro-IoT Farm Network",
+      "goalWei": "20000000000000000000",
+      "raisedWei": "2000000000000000000",
+      "deadline": 1742000000,
+      "finalized": false,
+      "successful": false,
+      "createdAt": 1739000000
+    },
+    {
+      "id": 5,
+      "evidenceId": 105,
+      "title": "Forest Monitoring System",
+      "goalWei": "8000000000000000000",
+      "raisedWei": "8000000000000000000",
+      "deadline": 1737000000,
+      "finalized": true,
+      "successful": true,
+      "createdAt": 1739000000
+    }
+  ]
+}
