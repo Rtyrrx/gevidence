@@ -1,20 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import {RoleManager} from "../../core/RoleManager.sol";
 import {GEvidenceRegistry} from "../../core/GEvidenceRegistry.sol";
 import {EvidenceTypes} from "../../core/EvidenceTypes.sol";
 
-/**
- * Minimal interface for checking campaign state without importing full contract.
- * Must match VerificationCrowdfund.Campaign layout.
- */
 interface IVerificationCrowdfund {
+    enum CampaignKind {
+        CompanyOrAdmin,
+        Community
+    }
     struct Campaign {
         uint256 id;
         uint256 evidenceId;
-        address owner;
+        address creator;
+        address beneficiary;
+        CampaignKind kind;
         string title;
         uint256 goalWei;
         uint64 deadline;
@@ -26,19 +29,12 @@ interface IVerificationCrowdfund {
     function getCampaign(uint256 campaignId) external view returns (Campaign memory);
 }
 
-/**
- * @title CompanyCertificateNFT
- * @notice ERC-721 certificate minted after successful verification campaign + verified evidence
- * @dev Frontend-friendly: simple mint function + events + mapping token -> evidenceId
- */
 contract CompanyCertificateNFT is ERC721URIStorage {
     RoleManager public immutable roles;
     GEvidenceRegistry public immutable registry;
     IVerificationCrowdfund public immutable crowdfund;
 
     uint256 private _nextTokenId = 1;
-
-    // tokenId -> evidenceId
     mapping(uint256 => uint256) public evidenceOfToken;
 
     event CertificateMinted(
@@ -80,12 +76,6 @@ contract CompanyCertificateNFT is ERC721URIStorage {
         _;
     }
 
-    /**
-     * @notice Mint certificate NFT to the evidence company if campaign is finalized+successful and evidence is Verified
-     * @param evidenceId Evidence id in GEvidenceRegistry
-     * @param campaignId Campaign id in VerificationCrowdfund (must be linked to same evidenceId)
-     * @param tokenUri Off-chain metadata URI (IPFS/HTTPS)
-     */
     function mintCertificate(
         uint256 evidenceId,
         uint256 campaignId,
@@ -98,16 +88,13 @@ contract CompanyCertificateNFT is ERC721URIStorage {
             revert EvidenceNotVerified();
         }
 
-        // only one certificate per evidence (as your current registry mapping suggests)
         if (registry.certificateTokenOfEvidence(evidenceId) != 0) revert AlreadyCertified();
 
-        // validate campaign state and link
         IVerificationCrowdfund.Campaign memory c = crowdfund.getCampaign(campaignId);
         if (c.id == 0) revert CampaignNotEligible();
         if (c.evidenceId != evidenceId) revert CampaignMismatch();
         if (!c.finalized || !c.successful) revert CampaignNotEligible();
 
-        // mint to the company that owns the evidence
         address company = registry.companyOfEvidence(evidenceId);
 
         tokenId = _nextTokenId++;
@@ -115,8 +102,6 @@ contract CompanyCertificateNFT is ERC721URIStorage {
         _setTokenURI(tokenId, tokenUri);
 
         evidenceOfToken[tokenId] = evidenceId;
-
-        // link back in registry for frontend querying
         registry.linkCertificate(evidenceId, tokenId);
 
         emit CertificateMinted(tokenId, evidenceId, campaignId, company, tokenUri);
