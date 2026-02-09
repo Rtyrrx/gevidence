@@ -14,7 +14,7 @@ async function deployAll(treasuryAddr) {
   const [admin] = await ethers.getSigners();
 
   const Roles = await ethers.getContractFactory("RoleManager");
-  const roles = await Roles.deploy();
+  const roles = await Roles.deploy(await admin.getAddress());
   await roles.waitForDeployment();
 
   const Registry = await ethers.getContractFactory("GEvidenceRegistry");
@@ -57,10 +57,7 @@ async function createEvidenceFlexible(registry, roles, admin, company) {
   } catch (_) {}
 
   const candidates = [
-    { fn: "createEvidence", args: ["Demo Evidence", hashTxt("meta-1")] },
-    { fn: "createEvidence", args: [hashTxt("meta-1")] },
-    { fn: "registerEvidence", args: [hashTxt("meta-1")] },
-    { fn: "submitEvidence", args: [hashTxt("meta-1")] },
+    { fn: "createEvidence", args: [hashTxt("meta-1"), "Demo Evidence"] },
   ];
 
   for (const c of candidates) {
@@ -81,8 +78,15 @@ async function createEvidenceFlexible(registry, roles, admin, company) {
   throw new Error("Could not create evidence for certificate tests.");
 }
 
-async function ensureVerified(registry, roles, admin, verifier, evidenceId) {
-  // give verifier role
+async function ensureVerified(registry, roles, admin, verifier, evidenceId, company) {
+  // give company role
+  try {
+    const COMPANY_ROLE = await roles.COMPANY_ROLE();
+    if (!(await roles.hasRole(COMPANY_ROLE, company.address))) {
+      await (await roles.connect(admin).grantRole(COMPANY_ROLE, company.address)).wait();
+    }
+  } catch (_) {}
+
   try {
     const VERIFIER_ROLE = await roles.VERIFIER_ROLE();
     if (!(await roles.hasRole(VERIFIER_ROLE, verifier.address))) {
@@ -90,26 +94,20 @@ async function ensureVerified(registry, roles, admin, verifier, evidenceId) {
     }
   } catch (_) {}
 
-  // Try common verification setters
-  const candidates = [
-    { fn: "verifyEvidence", args: [evidenceId] },
-    { fn: "markVerified", args: [evidenceId] },
-    { fn: "setEvidenceVerified", args: [evidenceId] },
-    { fn: "updateEvidenceStatus", args: [evidenceId, 2] },
-    { fn: "setEvidenceStatus", args: [evidenceId, 2] },
-  ];
+  // First submit evidence if needed
+  try {
+    await (await registry.connect(company).submitEvidence(evidenceId)).wait();
+  } catch (_) {}
 
-  for (const c of candidates) {
-    const f = registry.connect(verifier)[c.fn];
-    if (typeof f !== "function") continue;
-    try {
-      await (await registry.connect(verifier)[c.fn](...c.args)).wait();
-      return;
-    } catch (_) {}
-  }
+  // Try to move to UnderReview
+  try {
+    await (await registry.connect(verifier).moveToUnderReview(evidenceId, "review initiated")).wait();
+  } catch (_) {}
 
-  // If none worked, maybe status is already Verified or registry doesn't enforce.
-  // We'll just try to proceed.
+  // Try to verify the evidence
+  try {
+    await (await registry.connect(verifier).verifyEvidence(evidenceId, true, "verified")).wait();
+  } catch (_) {}
 }
 
 describe("CompanyCertificateNFT", function () {
@@ -133,7 +131,7 @@ describe("CompanyCertificateNFT", function () {
     await (await crowdfund.finalize(campaignId)).wait();
 
     // make evidence Verified
-    await ensureVerified(registry, roles, admin, verifier, evidenceId);
+    await ensureVerified(registry, roles, admin, verifier, evidenceId, company);
 
     const tokenUri = "ipfs://gevidence/company-cert/1";
     const tx = await cert.connect(verifier).mintCertificate(evidenceId, campaignId, tokenUri);

@@ -54,15 +54,8 @@ async function createEvidenceFlexible(registry, roles, admin, company) {
 
   const now = await latestTs();
   const candidates = [
-    { fn: "createEvidence", args: ["Demo Evidence", hashTxt("meta-1")] },
-    { fn: "createEvidence", args: [hashTxt("meta-1")] },
-    { fn: "registerEvidence", args: ["Demo Evidence", hashTxt("meta-1")] },
-    { fn: "registerEvidence", args: [hashTxt("meta-1")] },
-    { fn: "submitEvidence", args: [hashTxt("meta-1")] },
-    { fn: "addEvidence", args: ["Demo Evidence", hashTxt("meta-1")] },
-    { fn: "addEvidence", args: [hashTxt("meta-1")] },
-    // sometimes evidence has a uri and/or deadline-like field
-    { fn: "createEvidence", args: ["Demo Evidence", hashTxt("meta-1"), `ipfs://demo-${now}`] },
+    { fn: "createEvidence", args: [hashTxt("meta-1"), "Demo Evidence"] },
+    { fn: "createEvidence", args: [hashTxt("meta-1"), `ipfs://demo-${now}`] },
   ];
 
   let okTx = null;
@@ -87,7 +80,7 @@ describe("GEvidenceRegistry (core)", function () {
     const [admin, company] = await ethers.getSigners();
 
     const Roles = await ethers.getContractFactory("RoleManager");
-    const roles = await Roles.deploy();
+    const roles = await Roles.deploy(await admin.getAddress());
     await roles.waitForDeployment();
 
     const Registry = await ethers.getContractFactory("GEvidenceRegistry");
@@ -100,14 +93,14 @@ describe("GEvidenceRegistry (core)", function () {
 
     // status read should not revert
     const st = await registry.statusOfEvidence(evidenceId);
-    expect(st).to.not.equal(undefined);
+    expect(st).to.not.be.undefined;
 
     // link/update campaign (we patched registry to allow updates for community campaigns)
     await (await registry.linkCampaign(evidenceId, 101)).wait();
-    expect(await registry.campaignOfEvidence(evidenceId)).to.equal(101);
+    expect(await registry.campaignOfEvidence(evidenceId)).to.equal(101n);
 
     await (await registry.linkCampaign(evidenceId, 202)).wait();
-    expect(await registry.campaignOfEvidence(evidenceId)).to.equal(202);
+    expect(await registry.campaignOfEvidence(evidenceId)).to.equal(202n);
 
     // record off-cycle request (if implemented)
     await (await registry.recordOffCycleRequest(evidenceId, 77)).wait();
