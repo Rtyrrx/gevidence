@@ -1,5 +1,6 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
+require("@nomicfoundation/hardhat-chai-matchers");
 
 function hashTxt(s) {
   return ethers.id(s);
@@ -11,8 +12,10 @@ async function advanceTime(sec) {
 }
 
 async function deployCore() {
+  const [admin] = await ethers.getSigners();
+
   const Roles = await ethers.getContractFactory("RoleManager");
-  const roles = await Roles.deploy();
+  const roles = await Roles.deploy(await admin.getAddress());
   await roles.waitForDeployment();
 
   const Registry = await ethers.getContractFactory("GEvidenceRegistry");
@@ -31,10 +34,7 @@ async function createEvidenceFlexible(registry, roles, admin, company) {
   } catch (_) {}
 
   const candidates = [
-    { fn: "createEvidence", args: ["Demo Evidence", hashTxt("meta-1")] },
-    { fn: "createEvidence", args: [hashTxt("meta-1")] },
-    { fn: "registerEvidence", args: [hashTxt("meta-1")] },
-    { fn: "submitEvidence", args: [hashTxt("meta-1")] },
+    { fn: "createEvidence", args: [hashTxt("meta-1"), "Demo Evidence"] },
   ];
 
   for (const c of candidates) {

@@ -11,8 +11,10 @@ async function advanceTime(sec) {
 }
 
 async function deployAll(treasuryAddr) {
+  const [admin] = await ethers.getSigners();
+
   const Roles = await ethers.getContractFactory("RoleManager");
-  const roles = await Roles.deploy();
+  const roles = await Roles.deploy(await admin.getAddress());
   await roles.waitForDeployment();
 
   const Registry = await ethers.getContractFactory("GEvidenceRegistry");
@@ -56,10 +58,7 @@ async function createEvidenceFlexible(registry, roles, admin, company) {
   } catch (_) {}
 
   const candidates = [
-    { fn: "createEvidence", args: ["Demo Evidence", hashTxt("meta-1")] },
-    { fn: "createEvidence", args: [hashTxt("meta-1")] },
-    { fn: "registerEvidence", args: [hashTxt("meta-1")] },
-    { fn: "submitEvidence", args: [hashTxt("meta-1")] },
+    { fn: "createEvidence", args: [hashTxt("meta-1"), "Demo Evidence"] },
   ];
 
   for (const c of candidates) {
@@ -80,7 +79,15 @@ async function createEvidenceFlexible(registry, roles, admin, company) {
   throw new Error("Could not create evidence for off-cycle tests.");
 }
 
-async function ensureVerified(registry, roles, admin, verifier, evidenceId) {
+async function ensureVerified(registry, roles, admin, verifier, evidenceId, company) {
+  // give company role
+  try {
+    const COMPANY_ROLE = await roles.COMPANY_ROLE();
+    if (!(await roles.hasRole(COMPANY_ROLE, company.address))) {
+      await (await roles.connect(admin).grantRole(COMPANY_ROLE, company.address)).wait();
+    }
+  } catch (_) {}
+
   try {
     const VERIFIER_ROLE = await roles.VERIFIER_ROLE();
     if (!(await roles.hasRole(VERIFIER_ROLE, verifier.address))) {
@@ -88,21 +95,20 @@ async function ensureVerified(registry, roles, admin, verifier, evidenceId) {
     }
   } catch (_) {}
 
-  const candidates = [
-    { fn: "verifyEvidence", args: [evidenceId] },
-    { fn: "markVerified", args: [evidenceId] },
-    { fn: "setEvidenceVerified", args: [evidenceId] },
-    { fn: "setEvidenceStatus", args: [evidenceId, 2] },
-    { fn: "updateEvidenceStatus", args: [evidenceId, 2] },
-  ];
+  // First submit evidence if needed
+  try {
+    await (await registry.connect(company).submitEvidence(evidenceId)).wait();
+  } catch (_) {}
 
-  for (const c of candidates) {
-    if (typeof registry.connect(verifier)[c.fn] !== "function") continue;
-    try {
-      await (await registry.connect(verifier)[c.fn](...c.args)).wait();
-      return;
-    } catch (_) {}
-  }
+  // Try to move to UnderReview
+  try {
+    await (await registry.connect(verifier).moveToUnderReview(evidenceId, "review initiated")).wait();
+  } catch (_) {}
+
+  // Try to verify the evidence
+  try {
+    await (await registry.connect(verifier).verifyEvidence(evidenceId, true, "verified")).wait();
+  } catch (_) {}
 }
 
 describe("Off-cycle checks", function () {
@@ -127,7 +133,7 @@ describe("Off-cycle checks", function () {
     await (await crowdfund.finalize(campaignId)).wait();
 
     // must be verified evidence for off-cycle
-    await ensureVerified(registry, roles, admin, verifier, evidenceId);
+    await ensureVerified(registry, roles, admin, verifier, evidenceId, company);
 
     const token = await ethers.getContractAt("RewardToken", rewardTokenAddr);
 
